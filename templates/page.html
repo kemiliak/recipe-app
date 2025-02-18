@@ -1,0 +1,10 @@
+<h1>Oma profiili</h1>
+<p>{{ message }}, {{ user }}!</p>
+<p>{{ intro }}</p>
+<ul>
+{% for item in items %}
+<li><a href="{{ item[1] }}">{{ item[0] }}</a></li>
+{% endfor %}
+</ul>
+<br>
+<a href="">Kirjaudu ulos</a>
