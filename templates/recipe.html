@@ -19,3 +19,6 @@
 </ul>
 <hr>
 <a id="backLink" href="\page">Takaisin</a>
+{% if user_is_creator %}
+| <a href="/create/{{ recipe_id }}">Muokkaa</a>
+{% endif %}

@@ -34,3 +34,13 @@ def get_recipes():
              serving_size, created_at, user_id
              FROM recipes"""
     return db.query(sql)
+
+def update_recipe(recipe_id, title, instructions, ingredients, cooking_time, serving_size, user_id):
+    sql = """UPDATE recipes SET title = ?, instructions = ?, ingredients = ?, 
+             cooking_time = ?, serving_size = ?
+             WHERE recipe_id = ? AND user_id = ?"""
+    db.execute(sql, [title, instructions, ingredients, cooking_time, serving_size, recipe_id, user_id])
+
+def creator_id(recipe_id):
+    sql = "SELECT user_id FROM recipes WHERE recipe_id = ?"
+    return db.query_one(sql, [recipe_id])[0]

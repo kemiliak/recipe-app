@@ -26,3 +26,8 @@ def username(id):
     if result:
         return result[0]
     return None
+
+def is_creator(id):
+    if user_id() == id:
+        return True
+    return False

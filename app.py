@@ -81,13 +81,16 @@ def show_recipe(recipe_id):
     """
     Displays the selected recipe
     """
+    # only the creator can modify the original recipe
+    user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
     recipe = recipes.get_recipe(recipe_id)
     instructions = [line.strip() for line in recipe[2].splitlines() if line.strip()]
     ingredients = [line.strip() for line in recipe[3].splitlines() if line.strip()]
     # TODO: comments = recipes.get_comments(recipe_id)
     return render_template("recipe.html", title=recipe[1], ingredients=ingredients, \
                            instructions=instructions, cooking_time=recipe[4], \
-                            serving_size=recipe[5], created_at=recipe[6], creator=recipe[8])
+                            serving_size=recipe[5], created_at=recipe[6], creator=recipe[8], \
+                                user_is_creator=user_is_creator, recipe_id=recipe_id)
 
 @app.route("/create/", methods=["GET", "POST"])
 def new_recipe():
@@ -136,3 +139,38 @@ def search():
         query = request.form.get("query")
         results = recipes.search(query) if query else recipes.get_recipes()
         return render_template("recipes.html", recipes=results, user="Kaikki")
+
+@app.route("/create/<int:recipe_id>", methods=["GET", "POST"])
+def edit_recipe(recipe_id):
+    recipe = recipes.get_recipe(recipe_id)
+    if request.method == "GET":
+        return render_template("create.html", title=recipe[1], instructions=recipe[2], \
+                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+    if request.method == "POST":
+        title = request.form["title"]
+        instructions = request.form["instructions"]
+        ingredients = request.form["ingredients"]
+        cooking_time = request.form["cooking_time"]
+        serving_size = request.form["serving_size"]
+        user_id = session["user_id"]
+
+        # temporal solution for handling missing values etc.
+        if not title or not ingredients or not instructions:
+            # TODO: flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
+            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
+                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+        if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
+            # TODO: flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
+            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
+                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+        if len(ingredients) > 5000 or len(instructions) > 5000:
+            # TODO: flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
+            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
+                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+
+        recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
+        return redirect("/recipe/" + str(recipe["recipe_id"]))
