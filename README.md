@@ -3,12 +3,12 @@
 ## Toiminnot
 
 * Käyttäjä pystyy: 
-	- luomaan tunnuksen ja kirjautumaan sisään
-	- lisäämään, muokkaamaan ja poistamaan reseptejä
-	- hakemaan reseptejä
+	- luomaan tunnuksen ja kirjautumaan sisään [x]
+	- lisäämään, muokkaamaan ja poistamaan reseptejä [x]
+	- hakemaan reseptejä [x]
 	- tallentamaan reseptejä suosikkeihin
 	- kommentoimaan reseptejä
-* Sovelluksessa on käyttäjäsivut, josta löytyy lisätyt reseptit sekä tilastoja.
+* Sovelluksessa on käyttäjäsivut, josta löytyy lisätyt reseptit [x]  sekä tilastoja.
 
 ## Asennus
 
