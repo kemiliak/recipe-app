@@ -1,0 +1,20 @@
+<!-- TODO: ADD ERROR HANDLING -->
+<title>Lisää resepti</title>
+<form action="/create/{{recipe_id}}" method="POST">
+    <p>Reseptin nimi*:<br>
+    <input type="text" name="title" value={{title}}></p>
+    <p>Valmistusaika:<br>
+    <input type="text" name="cooking_time" value={{cooking_time}}></p>
+    <p>Annoksia:<br>
+    <input type="text" name="serving_size" value={{serving_size}}></p>
+    <p>Ainekset*:<br>
+    <textarea id="inputField" name="ingredients" rows="5" cols="50">{{ingredients}}</textarea>
+    <br>
+    <p>Valmistusohje*:<br>
+    <textarea id="inputField" name="instructions" rows="5" cols="50">{{instructions}}</textarea>
+    <br>
+    <p>Erottele ainekset sekä ohjeen eri vaiheet rivinvaihdoilla.<br></p>
+    <p>* tähdellä merkityt kentät ovat pakollisia<br></p>
+    <p><br>
+    <input type="submit" value="Tallenna"> | <a id="backLink" href="\page">Takaisin</a>
+</form>

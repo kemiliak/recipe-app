@@ -1,0 +1,21 @@
+<h1>{{ title }}</h1>
+<hr>
+<p>Luonut: {{creator}}, {{ created_at }}<br>
+<p>Valmistusaika:<br>
+<ul>{{ cooking_time}}</ul>
+<p>Annoksia:<br>
+<ul>{{serving_size}}</ul>
+<p>Ainekset:<br>
+<ul>
+{% for ingredient in ingredients %}
+<li>{{ingredient}}</li>
+{% endfor %}
+</ul>
+<p>Valmistusohje:<br>
+<ul>
+{% for instruction in instructions %}
+<li>{{instruction}}</li>
+{% endfor %}
+</ul>
+<hr>
+<a id="backLink" href="\page">Takaisin</a>
