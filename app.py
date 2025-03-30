@@ -24,7 +24,7 @@ def home_page():
     Personal page
     """
     user = users.username(users.user_id())
-    options = [("Haku", "/page"), ("Lisää resepti", "/create"), \
+    options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
                ("Omat reseptit", "/recipes"), ("Suosikit", "/page")]
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
@@ -124,3 +124,15 @@ def display_recipes():
     username = users.username(user_id)
     r = recipes.get_user_recipes(user_id)
     return render_template("recipes.html", recipes=r, user = username)
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    """
+    Search feature that utilizes the display_recipes() function
+    """
+    if request.method == "GET":
+        return render_template("search.html")
+    if request.method == "POST":
+        query = request.form.get("query")
+        results = recipes.search(query) if query else recipes.get_recipes()
+        return render_template("recipes.html", recipes=results, user="Kaikki")

@@ -20,3 +20,17 @@ def get_user_recipes(user_id):
              FROM recipes
              WHERE user_id = ?"""
     return db.query(sql, [user_id])
+
+def search(query):
+    sql = """SELECT recipe_id, title, instructions, ingredients, cooking_time, 
+             serving_size, created_at, user_id
+             FROM recipes
+             WHERE title LIKE ?
+             ORDER BY created_at DESC"""
+    return db.query(sql, ["%" + query + "%"])
+
+def get_recipes():
+    sql = """SELECT recipe_id, title, instructions, ingredients, cooking_time, 
+             serving_size, created_at, user_id
+             FROM recipes"""
+    return db.query(sql)
