@@ -1,0 +1,11 @@
+<head>
+    <title>Reseptin poisto</title>
+</head>
+<body>
+    <h1>Reseptin poisto</h1>
+<form action="{{ recipe.id }}" method="POST">
+    <p>Haluatko varmasti poistaa reseptin?</p>
+    <input type="submit" name="continue" value="Jatka"/>
+    <input type="submit" name="cancel" value="Peruuta"/>
+</form>
+</body>

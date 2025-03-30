@@ -155,7 +155,7 @@ def edit_recipe(recipe_id):
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
-        # temporal solution for handling missing values etc.
+        # temporal solution for "handling" missing values etc.
         if not title or not ingredients or not instructions:
             # TODO: flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
             return render_template("create.html", title=recipe[1], instructions=recipe[2], \
@@ -174,3 +174,16 @@ def edit_recipe(recipe_id):
 
         recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
         return redirect("/recipe/" + str(recipe["recipe_id"]))
+   
+@app.route("/remove/<int:recipe_id>", methods=["GET", "POST"])
+def delete_recipe(recipe_id):
+    recipe = recipes.get_recipe(recipe_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", recipe=recipe)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            recipes.remove_recipe(recipe["recipe_id"])
+
+    return redirect("/recipes")

@@ -44,3 +44,7 @@ def update_recipe(recipe_id, title, instructions, ingredients, cooking_time, ser
 def creator_id(recipe_id):
     sql = "SELECT user_id FROM recipes WHERE recipe_id = ?"
     return db.query_one(sql, [recipe_id])[0]
+
+def remove_recipe(recipe_id):
+    sql = "DELETE FROM recipes WHERE recipe_id = ?"
+    db.execute(sql, [recipe_id])
