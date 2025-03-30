@@ -1,31 +1,30 @@
 CREATE TABLE users (
     id INTEGER PRIMARY KEY,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    username TEXT UNIQUE,
+    password_hash TEXT
 );
 
 CREATE TABLE recipes (
     recipe_id INTEGER PRIMARY KEY,
-    title TEXT NOT NULL,
-    instructions TEXT NOT NULL,
-    ingredients TEXT NOT NULL,
+    title TEXT,
+    instructions TEXT,
+    ingredients TEXT,
     cooking_time TEXT,
     serving_size TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT,
+    user_id INTEGER REFERENCES users(id)
 );
 
 CREATE TABLE favorites (
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id),
+    user_id INTEGER REFERENCES users(id),
+    recipe_id INTEGER REFERENCES recipes(recipe_id),
     PRIMARY KEY (user_id, recipe_id)
 );
 
 CREATE TABLE comments (
     id INTEGER PRIMARY KEY,
-    comment TEXT NOT NULL,
-    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id)
+    comment TEXT,
+    sent_at TEXT,
+    user_id INTEGER REFERENCES users(id),
+    recipe_id INTEGER REFERENCES recipes(recipe_id)
 );
