@@ -13,3 +13,10 @@ def get_recipe(recipe_id):
              FROM recipes r, users u
              WHERE r.user_id = u.id AND recipe_id = ?"""
     return db.query(sql, [recipe_id])[0]
+
+def get_user_recipes(user_id):
+    sql = """SELECT recipe_id, title, instructions, ingredients, cooking_time, 
+             serving_size, created_at, user_id
+             FROM recipes
+             WHERE user_id = ?"""
+    return db.query(sql, [user_id])

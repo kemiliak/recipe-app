@@ -25,7 +25,7 @@ def home_page():
     """
     user = users.username(users.user_id())
     options = [("Haku", "/page"), ("Lisää resepti", "/create"), \
-               ("Omat reseptit", "/page"), ("Suosikit", "/page")]
+               ("Omat reseptit", "/recipes"), ("Suosikit", "/page")]
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
                             tallentamiasi reseptejä sekä hakea reseptejä:", items=options)
@@ -116,3 +116,11 @@ def new_recipe():
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/recipes")
+def display_recipes():
+    """Shows a list of recipes the user has created"""
+    user_id = users.user_id()
+    username = users.username(user_id)
+    r = recipes.get_user_recipes(user_id)
+    return render_template("recipes.html", recipes=r, user = username)

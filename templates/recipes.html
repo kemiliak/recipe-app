@@ -1,0 +1,8 @@
+<h1>{{ user }} reseptit</h1>
+<ul>
+{% for recipe in recipes %}
+<li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
+{% endfor %}
+</ul>
+<br>
+<a href="/page">Takaisin</a>
