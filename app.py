@@ -118,21 +118,19 @@ def new_recipe():
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
+        filled = render_template("create.html", title=title, instructions=instructions, \
+                                    ingredients=ingredients, cooking_time=cooking_time, \
+                                    serving_size = serving_size)
+
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                    ingredients=ingredients, cooking_time=cooking_time, \
-                                    serving_size = serving_size)
+            return filled
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                    ingredients=ingredients, cooking_time=cooking_time, \
-                                    serving_size = serving_size)
+            return filled
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                    ingredients=ingredients, cooking_time=cooking_time, \
-                                    serving_size = serving_size)
+            return filled
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe_id))
@@ -174,21 +172,19 @@ def edit_recipe(recipe_id):
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
+        filled = render_template("create.html", title=title, instructions=instructions, \
+                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return filled
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return filled
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html", title=title, instructions=instructions, \
-                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return filled
 
     recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe["recipe_id"]))
