@@ -118,18 +118,21 @@ def new_recipe():
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
-        filled = {"title":title, "instructions":instructions, "ingredients":ingredients, \
-                  "cooking_time":cooking_time, "serving_size":serving_size}
-
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                    ingredients=ingredients, cooking_time=cooking_time, \
+                                    serving_size = serving_size)
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                    ingredients=ingredients, cooking_time=cooking_time, \
+                                    serving_size = serving_size)
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                    ingredients=ingredients, cooking_time=cooking_time, \
+                                    serving_size = serving_size)
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe_id))
@@ -158,13 +161,11 @@ def search():
 
 @app.route("/create/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
-    require_login()
     recipe = recipes.get_recipe(recipe_id)
     if request.method == "GET":
-        filled = {"title":recipe[1], "instructions":recipe[2], "ingredients":recipe[3], \
-                  "cooking_time":recipe[4], "serving_size":recipe[5], "recipe_id":recipe_id}
-        return render_template("create.html", filled=filled)
-    
+        return render_template("create.html", title=recipe[1], instructions=recipe[2], \
+                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
     if request.method == "POST":
         title = request.form["title"]
         instructions = request.form["instructions"]
@@ -173,21 +174,24 @@ def edit_recipe(recipe_id):
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
-        filled = {"title":title, "instructions":instructions, "ingredients":ingredients, \
-                  "cooking_time":cooking_time, "serving_size":serving_size, "recipe_id":recipe["recipe_id"]}
-        
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html", filled=filled)
+            return render_template("create.html", title=title, instructions=instructions, \
+                                ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
+                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
 
-        recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
-        return redirect("/recipe/" + str(recipe["recipe_id"]))
+    recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
+    return redirect("/recipe/" + str(recipe["recipe_id"]))
    
 @app.route("/remove/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
