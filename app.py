@@ -116,13 +116,13 @@ def new_recipe():
         user_id = session["user_id"]
 
         if not title or not ingredients or not instructions:
-            # TODO: flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
+            flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
             return render_template("create.html")
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
-            # TODO: flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
+            flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
             return render_template("create.html")
         if len(ingredients) > 5000 or len(instructions) > 5000:
-            # TODO: flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
+            flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
             return render_template("create.html")
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
@@ -168,17 +168,17 @@ def edit_recipe(recipe_id):
 
         # temporal solution for "handling" missing values etc.
         if not title or not ingredients or not instructions:
-            # TODO: flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
+            flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
             return render_template("create.html", title=recipe[1], instructions=recipe[2], \
                                 ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
                                 created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
-            # TODO: flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
+            flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
             return render_template("create.html", title=recipe[1], instructions=recipe[2], \
                                 ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
                                 created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
         if len(ingredients) > 5000 or len(instructions) > 5000:
-            # TODO: flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
+            flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
             return render_template("create.html", title=recipe[1], instructions=recipe[2], \
                                 ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
                                 created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)

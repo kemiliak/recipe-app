@@ -1,7 +1,11 @@
-{% if session.username %}
-<p>Olet kirjautunut nimellä {{session.username}}</p>
-<a href="\logout">Kirjaudu ulos</a>
-{% else %}
+<h2>Kirjaudu sisään</h2>
+
+{% for message in get_flashed_messages() %}
+    <p class="info">
+        {{ message }}
+    </p>
+{% endfor %}
+
 <form action="/login" method="POST">
     <p>Tunnus:<br>
     <input type="text" name="username"></p>
@@ -9,5 +13,4 @@
     <input type="password" name="password"></p>
     <input type="submit" value="Kirjaudu">
 </form>
-{% endif %}
 <a href="/">Takaisin</a>

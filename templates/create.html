@@ -1,5 +1,12 @@
-<!-- TODO: ADD ERROR HANDLING -->
 <title>Lisää resepti</title>
+<h2>Lisää resepti</h2>
+
+{% for message in get_flashed_messages() %}
+    <p class="info">
+        {{ message }}
+    </p>
+{% endfor %}
+
 <form action="/create/{{recipe_id}}" method="POST">
     <p>Reseptin nimi*:<br>
     <input type="text" name="title" value={{title}}></p>
