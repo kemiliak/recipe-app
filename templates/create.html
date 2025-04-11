@@ -9,16 +9,16 @@
 
 <form action="/create/{{recipe_id}}" method="POST">
     <p>Reseptin nimi*:<br>
-    <input type="text" name="title" value={{title}}></p>
+    <input type="text" name="title" value="{{filled.title}}" maxlength="35" ></p>
     <p>Valmistusaika:<br>
-    <input type="text" name="cooking_time" value={{cooking_time}}></p>
+    <input type="text" name="cooking_time" value="{{filled.cooking_time}}"></p>
     <p>Annoksia:<br>
-    <input type="text" name="serving_size" value={{serving_size}}></p>
+    <input type="text" name="serving_size" value="{{filled.serving_size}}"></p>
     <p>Ainekset*:<br>
-    <textarea id="inputField" name="ingredients" rows="5" cols="50">{{ingredients}}</textarea>
+    <textarea id="inputField" name="ingredients" rows="5" cols="50">{{filled.ingredients}}</textarea>
     <br>
     <p>Valmistusohje*:<br>
-    <textarea id="inputField" name="instructions" rows="5" cols="50">{{instructions}}</textarea>
+    <textarea id="inputField" name="instructions" rows="5" cols="50">{{filled.instructions}}</textarea>
     <br>
     <p>Erottele ainekset sekä ohjeen eri vaiheet rivinvaihdoilla.<br></p>
     <p>* tähdellä merkityt kentät ovat pakollisia<br></p>

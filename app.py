@@ -106,7 +106,7 @@ def new_recipe():
     """
     require_login()
     if request.method == "GET":
-        return render_template("create.html")
+        return render_template("create.html", filled={})
     if request.method == "POST":
         title = request.form["title"]
         instructions = request.form["instructions"]
@@ -115,15 +115,18 @@ def new_recipe():
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
+        filled = {"title":title, "instructions":instructions, "ingredients":ingredients, \
+                  "cooking_time":cooking_time, "serving_size":serving_size}
+
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html")
+            return render_template("create.html", filled=filled)
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html")
+            return render_template("create.html", filled=filled)
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html")
+            return render_template("create.html", filled=filled)
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe_id))
@@ -155,9 +158,10 @@ def edit_recipe(recipe_id):
     require_login()
     recipe = recipes.get_recipe(recipe_id)
     if request.method == "GET":
-        return render_template("create.html", title=recipe[1], instructions=recipe[2], \
-                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+        filled = {"title":recipe[1], "instructions":recipe[2], "ingredients":recipe[3], \
+                  "cooking_time":recipe[4], "serving_size":recipe[5]}
+        return render_template("create.html", filled=filled)
+    
     if request.method == "POST":
         title = request.form["title"]
         instructions = request.form["instructions"]
@@ -166,22 +170,18 @@ def edit_recipe(recipe_id):
         serving_size = request.form["serving_size"]
         user_id = session["user_id"]
 
-        # temporal solution for "handling" missing values etc.
+        filled = {"title":title, "instructions":instructions, "ingredients":ingredients, \
+                  "cooking_time":cooking_time, "serving_size":serving_size}
+        
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
-                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return render_template("create.html", filled=filled)
         if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
             flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
-                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return render_template("create.html", filled=filled)
         if len(ingredients) > 5000 or len(instructions) > 5000:
             flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return render_template("create.html", title=recipe[1], instructions=recipe[2], \
-                                ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
-                                created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+            return render_template("create.html", filled=filled)
 
         recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
         return redirect("/recipe/" + str(recipe["recipe_id"]))
