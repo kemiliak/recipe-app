@@ -1,3 +1,9 @@
+{% for message in get_flashed_messages() %}
+    <p class="info">
+        {{ message }}
+    </p>
+{% endfor %}
+
 <h1>{{ title }}</h1>
 <hr>
 <p>Luonut: {{creator}}, {{ created_at }}<br>
@@ -22,4 +28,10 @@
 {% if user_is_creator %}
 | <a href="/create/{{ recipe_id }}">Muokkaa</a>
 | <a href="/remove/{{ recipe_id }}">Poista</a>
+{% endif %}
+
+{% if is_favorite %}
+|    <a href="/remove_favorite/{{ recipe_id }}">Poista suosikeista</a>
+{% else %}
+|    <a href="/add_to_favorites/{{ recipe_id }}">Lisää suosikkeihin</a>
 {% endif %}

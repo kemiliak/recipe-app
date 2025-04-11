@@ -30,7 +30,7 @@ def home_page():
     require_login()
     user = users.username(users.user_id())
     options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
-               ("Omat reseptit", "/recipes"), ("Suosikit", "/page")]
+               ("Omat reseptit", "/recipes"), ("Suosikit", "/favorites")]
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
                             tallentamiasi reseptejä sekä hakea reseptejä:", items=options)
@@ -90,14 +90,17 @@ def show_recipe(recipe_id):
     require_login()
     # only the creator can modify the original recipe
     user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
+    is_favorite = True if recipe_id in recipes.get_favorites_ids(users.user_id()) else False
     recipe = recipes.get_recipe(recipe_id)
+
     instructions = [line.strip() for line in recipe[2].splitlines() if line.strip()]
     ingredients = [line.strip() for line in recipe[3].splitlines() if line.strip()]
+
     # TODO: comments = recipes.get_comments(recipe_id)
     return render_template("recipe.html", title=recipe[1], ingredients=ingredients, \
-                           instructions=instructions, cooking_time=recipe[4], \
+                            instructions=instructions, cooking_time=recipe[4], \
                             serving_size=recipe[5], created_at=recipe[6], creator=recipe[8], \
-                                user_is_creator=user_is_creator, recipe_id=recipe_id)
+                            user_is_creator=user_is_creator, is_favorite=is_favorite, recipe_id=recipe_id)
 
 @app.route("/create/", methods=["GET", "POST"])
 def new_recipe():
@@ -159,7 +162,7 @@ def edit_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
     if request.method == "GET":
         filled = {"title":recipe[1], "instructions":recipe[2], "ingredients":recipe[3], \
-                  "cooking_time":recipe[4], "serving_size":recipe[5]}
+                  "cooking_time":recipe[4], "serving_size":recipe[5], "recipe_id":recipe_id}
         return render_template("create.html", filled=filled)
     
     if request.method == "POST":
@@ -171,7 +174,7 @@ def edit_recipe(recipe_id):
         user_id = session["user_id"]
 
         filled = {"title":title, "instructions":instructions, "ingredients":ingredients, \
-                  "cooking_time":cooking_time, "serving_size":serving_size}
+                  "cooking_time":cooking_time, "serving_size":serving_size, "recipe_id":recipe["recipe_id"]}
         
         if not title or not ingredients or not instructions:
             flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
@@ -192,10 +195,45 @@ def delete_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
 
     if request.method == "GET":
-        return render_template("remove.html", recipe=recipe)
+        return render_template("remove.html", recipe=recipe, is_recipe=True)
 
     if request.method == "POST":
         if "continue" in request.form:
             recipes.remove_recipe(recipe["recipe_id"])
 
     return redirect("/recipes")
+
+@app.route("/add_to_favorites/<int:recipe_id>")
+def add_to_favorites(recipe_id):
+    require_login()
+    # check that recipe is not already in favorites
+    try:
+        recipes.add_favorites(users.user_id(), recipe_id)
+        return get_favorites()
+    except sqlite3.IntegrityError:
+        flash("VIRHE: resepti on jo suosikeissa")
+        return show_recipe(recipe_id)
+
+@app.route("/favorites", methods=["GET"])
+def get_favorites():
+    require_login()
+    user_id = users.user_id()
+    res = recipes.get_favorites(user_id)
+    if res:
+        return render_template("recipes.html", recipes=res, user=users.username(user_id), favorites=True)
+    else:
+        return render_template("recipes.html", recipes="", user=users.username(user_id), favorites=True)
+    
+@app.route("/remove_favorite/<int:recipe_id>", methods=["POST", "GET"])
+def remove_from_favorites(recipe_id):
+    require_login()
+    recipe = recipes.get_recipe(recipe_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", recipe=recipe, is_recipe=False)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            recipes.remove_favorite(recipe["recipe_id"])
+
+    return redirect("/favorites")

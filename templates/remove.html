@@ -1,8 +1,16 @@
 <head>
+    {% if is_recipe %}
     <title>Reseptin poisto</title>
+    {% else %}
+    <title>Poista suosikeista</title>
+    {% endif %}
 </head>
 <body>
+    {% if is_recipe %}
     <h1>Reseptin poisto</h1>
+    {% else %}
+    <h1>Poista suosikeista</h1>
+    {% endif %}
 <form action="{{ recipe.id }}" method="POST">
     <p>Haluatko varmasti poistaa reseptin?</p>
     <input type="submit" name="continue" value="Jatka"/>

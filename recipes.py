@@ -36,10 +36,10 @@ def get_recipes():
     return db.query(sql)
 
 def update_recipe(recipe_id, title, instructions, ingredients, cooking_time, serving_size, user_id):
-    sql = """UPDATE recipes SET title = ?, instructions = ?, ingredients = ?, 
+    sql = """UPDATE recipes SET recipe_id = ?, title = ?, instructions = ?, ingredients = ?, 
              cooking_time = ?, serving_size = ?
              WHERE recipe_id = ? AND user_id = ?"""
-    db.execute(sql, [title, instructions, ingredients, cooking_time, serving_size, recipe_id, user_id])
+    db.execute(sql, [recipe_id, title, instructions, ingredients, cooking_time, serving_size, recipe_id, user_id])
 
 def creator_id(recipe_id):
     sql = "SELECT user_id FROM recipes WHERE recipe_id = ?"
@@ -47,4 +47,23 @@ def creator_id(recipe_id):
 
 def remove_recipe(recipe_id):
     sql = "DELETE FROM recipes WHERE recipe_id = ?"
+    db.execute(sql, [recipe_id])
+
+def add_favorites(user_id, recipe_id):
+    sql = "INSERT INTO favorites (user_id, recipe_id) VALUES (?, ?)"
+    db.execute(sql, [user_id, recipe_id])
+
+def get_favorites(user_id):
+    sql = """SELECT recipe_id, title, instructions, ingredients, cooking_time, 
+             serving_size, created_at, user_id
+             FROM recipes
+             WHERE recipe_id IN (SELECT recipe_id FROM favorites WHERE user_id = ?)"""
+    return db.query(sql, [user_id])
+
+def get_favorites_ids(user_id):
+    sql = "SELECT recipe_id FROM favorites WHERE user_id = ?"
+    return [id[0] for id in db.query(sql, [user_id])]
+
+def remove_favorite(recipe_id):
+    sql = "DELETE FROM favorites WHERE recipe_id = ?"
     db.execute(sql, [recipe_id])
