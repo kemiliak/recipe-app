@@ -1,11 +1,15 @@
 """Module for application routes"""
 import sqlite3
 from flask import Flask
-from flask import flash, render_template, redirect, request, session
+from flask import abort, flash, render_template, redirect, request, session
 import users, recipes, config
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -23,6 +27,7 @@ def home_page():
     """
     Personal page
     """
+    require_login()
     user = users.username(users.user_id())
     options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
                ("Omat reseptit", "/recipes"), ("Suosikit", "/page")]
@@ -53,6 +58,7 @@ def login():
 @app.route("/logout")
 def logout():
     """Logout"""
+    require_login()
     del session["user_id"]
     return redirect("/")
 
@@ -81,6 +87,7 @@ def show_recipe(recipe_id):
     """
     Displays the selected recipe
     """
+    require_login()
     # only the creator can modify the original recipe
     user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
     recipe = recipes.get_recipe(recipe_id)
@@ -97,6 +104,7 @@ def new_recipe():
     """
     Creates and displays a new recipe
     """
+    require_login()
     if request.method == "GET":
         return render_template("create.html")
     if request.method == "POST":
@@ -123,6 +131,7 @@ def new_recipe():
 @app.route("/recipes")
 def display_recipes():
     """Shows a list of recipes the user has created"""
+    require_login()
     user_id = users.user_id()
     username = users.username(user_id)
     r = recipes.get_user_recipes(user_id)
@@ -133,6 +142,7 @@ def search():
     """
     Search feature that utilizes the display_recipes() function
     """
+    require_login()
     if request.method == "GET":
         return render_template("search.html")
     if request.method == "POST":
@@ -142,6 +152,7 @@ def search():
 
 @app.route("/create/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
+    require_login()
     recipe = recipes.get_recipe(recipe_id)
     if request.method == "GET":
         return render_template("create.html", title=recipe[1], instructions=recipe[2], \
@@ -177,6 +188,7 @@ def edit_recipe(recipe_id):
    
 @app.route("/remove/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
+    require_login()
     recipe = recipes.get_recipe(recipe_id)
 
     if request.method == "GET":
