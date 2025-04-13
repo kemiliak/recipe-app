@@ -28,7 +28,7 @@ def home_page():
     Personal page
     """
     require_login()
-    user = users.username(users.user_id())
+    user = users.username(session["user_id"])
     options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
                ("Omat reseptit", "/recipes"), ("Suosikit", "/favorites")]
     return render_template("page.html", message="Tervetuloa", user=user, \
@@ -89,18 +89,21 @@ def show_recipe(recipe_id):
     """
     require_login()
     # only the creator can modify the original recipe
+    user_id = session["user_id"]
     user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
-    is_favorite = True if recipe_id in recipes.get_favorites_ids(users.user_id()) else False
+    is_favorite = True if recipe_id in recipes.get_favorites_ids(user_id) else False
     recipe = recipes.get_recipe(recipe_id)
 
     instructions = [line.strip() for line in recipe[2].splitlines() if line.strip()]
     ingredients = [line.strip() for line in recipe[3].splitlines() if line.strip()]
 
-    # TODO: comments = recipes.get_comments(recipe_id)
+    comments = recipes.get_comments(recipe_id)
+
     return render_template("recipe.html", title=recipe[1], ingredients=ingredients, \
                             instructions=instructions, cooking_time=recipe[4], \
                             serving_size=recipe[5], created_at=recipe[6], creator=recipe[8], \
-                            user_is_creator=user_is_creator, is_favorite=is_favorite, recipe_id=recipe_id)
+                            user_is_creator=user_is_creator, is_favorite=is_favorite, \
+                            recipe_id=recipe_id, comments=comments)
 
 @app.route("/create/", methods=["GET", "POST"])
 def new_recipe():
@@ -139,7 +142,7 @@ def new_recipe():
 def display_recipes():
     """Shows a list of recipes the user has created"""
     require_login()
-    user_id = users.user_id()
+    user_id = session["user_id"]
     username = users.username(user_id)
     r = recipes.get_user_recipes(user_id)
     return render_template("recipes.html", recipes=r, user = username)
@@ -208,7 +211,7 @@ def add_to_favorites(recipe_id):
     require_login()
     # check that recipe is not already in favorites
     try:
-        recipes.add_favorites(users.user_id(), recipe_id)
+        recipes.add_favorites(session["user_id"], recipe_id)
         return get_favorites()
     except sqlite3.IntegrityError:
         flash("VIRHE: resepti on jo suosikeissa")
@@ -217,7 +220,7 @@ def add_to_favorites(recipe_id):
 @app.route("/favorites", methods=["GET"])
 def get_favorites():
     require_login()
-    user_id = users.user_id()
+    user_id = session["user_id"]
     res = recipes.get_favorites(user_id)
     if res:
         return render_template("recipes.html", recipes=res, user=users.username(user_id), favorites=True)
@@ -237,3 +240,21 @@ def remove_from_favorites(recipe_id):
             recipes.remove_favorite(recipe["recipe_id"])
 
     return redirect("/favorites")
+
+@app.route("/comment/<int:recipe_id>", methods=["POST"])
+def comment(recipe_id):
+    require_login()
+    comment = request.form["comment"]
+    user_id = session["user_id"]
+
+    if len(comment) > 5000:
+        flash("VIRHE: Kommentti on liian pitkä!")
+        return redirect("/recipe/" + str(recipe_id))
+
+    try:
+        recipes.add_comment(comment, user_id, recipe_id)
+        return show_recipe(recipe_id)
+    except sqlite3.IntegrityError:
+        flash("VIRHE: Kommentointi epäonnistui")
+    
+    return redirect("/recipe/" + str(recipe_id))

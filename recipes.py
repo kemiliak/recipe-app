@@ -1,4 +1,5 @@
 import db
+from flask import session
 
 def add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id):
     sql = """INSERT INTO recipes (title, instructions, ingredients, cooking_time, serving_size,
@@ -67,3 +68,15 @@ def get_favorites_ids(user_id):
 def remove_favorite(recipe_id):
     sql = "DELETE FROM favorites WHERE recipe_id = ?"
     db.execute(sql, [recipe_id])
+
+def add_comment(comment, user_id, recipe_id):
+    sql = """INSERT INTO comments (comment, user_id, recipe_id, sent_at) 
+             VALUES (?, ?, ?, datetime('now'))"""
+    db.execute(sql, [comment, user_id, recipe_id])
+
+def get_comments(recipe_id):
+    sql = """SELECT c.comment, u.username, c.sent_at 
+             FROM comments c, users u 
+             WHERE recipe_id = ? AND c.user_id = u.id"""
+    comments = db.query(sql, [recipe_id])
+    return comments if comments else None

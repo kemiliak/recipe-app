@@ -1,10 +1,9 @@
+<h1>{{ title }}</h1>
 {% for message in get_flashed_messages() %}
     <p class="info">
         {{ message }}
     </p>
 {% endfor %}
-
-<h1>{{ title }}</h1>
 <hr>
 <p>Luonut: {{creator}}, {{ created_at }}<br>
 <p>Valmistusaika:<br>
@@ -35,3 +34,22 @@
 {% else %}
 |    <a href="/add_to_favorites/{{ recipe_id }}">Lisää suosikkeihin</a>
 {% endif %}
+
+<br> 
+
+{% if comments %}
+<h2>Kommentit</h2>
+<ul>
+{% for comment in comments %}
+<li>{{comment[0]}} <br> Lähettänyt: {{comment.username}}, {{comment.sent_at}}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<h3>Kommentoi</h3>
+<form action="/comment/{{recipe_id}}" method="POST">
+<textarea id="inputField" name="comment" rows="5" cols="50"></textarea>
+<br>
+<br>
+<input type="submit" value="Lähetä">
+</form>
