@@ -6,9 +6,9 @@
 	- luomaan tunnuksen ja kirjautumaan sisään [x]
 	- lisäämään, muokkaamaan ja poistamaan reseptejä [x]
 	- hakemaan reseptejä [x]
-	- tallentamaan reseptejä suosikkeihin
-	- kommentoimaan reseptejä
-* Sovelluksessa on käyttäjäsivut, josta löytyy lisätyt reseptit [x]  sekä tilastoja.
+	- tallentamaan reseptejä suosikkeihin [x]
+	- kommentoimaan reseptejä [x]
+* Sovelluksessa on käyttäjäsivut, josta löytyy lisätyt reseptit sekä tilastoja. [x]
 
 ## Asennus
 
