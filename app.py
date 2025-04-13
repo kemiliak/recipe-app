@@ -28,12 +28,24 @@ def home_page():
     Personal page
     """
     require_login()
-    user = users.username(session["user_id"])
+    user_id = session["user_id"]
+    user = users.username(user_id)
     options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
                ("Omat reseptit", "/recipes"), ("Suosikit", "/favorites")]
+    users_recipes = recipes.users_recipe_count(user_id)
+    users_recipes = users_recipes if users_recipes else 0
+    n_recipes = recipes.recipe_count()
+    n_recipes = n_recipes if n_recipes else 0
+    # TODO: add currently most viewed recipe
+    # best_recipe_id = recipes.most_popular_recipe()
+    # best_recipe_id = best_recipe_id if best_recipe_id else None
+
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
-                            tallentamiasi reseptejä sekä hakea reseptejä:", items=options)
+                            tallentamiasi reseptejä sekä hakea reseptejä:", \
+                            items=options, n_recipes=n_recipes, users_recipes=users_recipes,
+                            best_recipe_id=False)
+
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -88,8 +100,9 @@ def show_recipe(recipe_id):
     Displays the selected recipe
     """
     require_login()
-    # only the creator can modify the original recipe
     user_id = session["user_id"]
+    recipes.visits(user_id)
+    # only the creator can modify the original recipe
     user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
     is_favorite = True if recipe_id in recipes.get_favorites_ids(user_id) else False
     recipe = recipes.get_recipe(recipe_id)

@@ -1,5 +1,4 @@
 import db
-from flask import session
 
 def add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id):
     sql = """INSERT INTO recipes (title, instructions, ingredients, cooking_time, serving_size,
@@ -80,3 +79,22 @@ def get_comments(recipe_id):
              WHERE recipe_id = ? AND c.user_id = u.id"""
     comments = db.query(sql, [recipe_id])
     return comments if comments else None
+
+def recipe_count():
+    sql = "SELECT COUNT(*) FROM recipes"
+    return db.query(sql)[0][0]
+
+def users_recipe_count(user_id):
+    sql = "SELECT COUNT(*) FROM recipes WHERE user_id = ?"
+    return db.query(sql, [user_id])[0][0]
+
+def visits(recipe_id):
+    sql = "INSERT INTO visits (visited_at, recipe_id) VALUES (datetime('now'), ?)"
+    db.execute(sql, [recipe_id])
+
+# TODO: select most popular recipe
+# def most_popular_recipe():
+#     sql = """SELECT recipe_id FROM visits
+#              GROUP BY recipe_id
+#              ORDER BY count(recipe_id) DESC LIMIT 1"""
+#     return db.query(sql)[0][0]

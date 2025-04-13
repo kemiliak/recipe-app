@@ -28,3 +28,9 @@ CREATE TABLE comments (
     user_id INTEGER REFERENCES users(id),
     recipe_id INTEGER REFERENCES recipes(recipe_id)
 );
+
+CREATE TABLE visits (
+    id INTEGER PRIMARY KEY,
+    visited_at TEXT,
+    recipe_id INTEGER REFERENCES recipes(recipe_id)
+)

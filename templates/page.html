@@ -7,4 +7,13 @@
 {% endfor %}
 </ul>
 <br>
+Reseptejä yhteensä: {{n_recipes}}
+<br>
+Omia reseptejä: {{users_recipes}}
+<br>
+{% if best_recipe_id %}
+Suosituin <a href="/recipe/{{ best_recipe_id }}">resepti</a>
+{% endif %}
+<br>
+<br>
 <a href="\logout">Kirjaudu ulos</a>
