@@ -152,16 +152,18 @@ def new_recipe():
         filled = render_template("create.html", title=title, instructions=instructions, \
                                     ingredients=ingredients, cooking_time=cooking_time, \
                                     serving_size = serving_size)
+        
+        fields = [["nimi", title, 35], ["ainekset", ingredients, 5000], ["ohje", instructions, 5000],
+                  ["valmistusaika", cooking_time, 35], ["annoskoko", serving_size, 35]]
 
-        if not title or not ingredients or not instructions:
-            flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return filled
-        if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
-            flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return filled
-        if len(ingredients) > 5000 or len(instructions) > 5000:
-            flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return filled
+        for field in fields[:3]:
+            if not field[1]:
+                flash(f"Virhe: Reseptin {field[0]} puuttuu")
+                return filled
+        for field in fields:
+            if len(field[1]) > field[2]:
+                flash(f"Virhe: Reseptin {field[0]} sisältää liikaa merkkejä")
+                return filled
 
     recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe_id))
@@ -206,16 +208,17 @@ def edit_recipe(recipe_id):
         filled = render_template("create.html", title=title, instructions=instructions, \
                                 ingredients=ingredients, cooking_time=cooking_time, serving_size=serving_size, \
                                 created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
+        fields = [["nimi", title, 35], ["ainekset", ingredients, 5000], ["ohje", instructions, 5000],
+                  ["valmistusaika", cooking_time, 35], ["annoskoko", serving_size, 35]]
 
-        if not title or not ingredients or not instructions:
-            flash("Virhe: reseptin nimi, ainekset tai ohje puuttuu")
-            return filled
-        if len(title) > 35 or len(cooking_time) > 20 or len(serving_size) > 20:
-            flash("Virhe: nimi, aika tai annoskoko sisältää liikaa merkkejä")
-            return filled
-        if len(ingredients) > 5000 or len(instructions) > 5000:
-            flash("Virhe: ainekset tai ohjeet sisältää liikaa merkkejä")
-            return filled
+        for field in fields[:3]:
+            if not field[1]:
+                flash(f"Virhe: Reseptin {field[0]} puuttuu")
+                return filled
+        for field in fields:
+            if len(field[1]) > field[2]:
+                flash(f"Virhe: Reseptin {field[0]} sisältää liikaa merkkejä")
+                return filled
 
     recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe["recipe_id"]))
