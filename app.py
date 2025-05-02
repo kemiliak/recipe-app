@@ -53,7 +53,7 @@ def login():
     Login
     """
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", filled={})
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -65,7 +65,8 @@ def login():
             return redirect("/page")
         else:
             flash("Virhe: Kirjautuminen epäonnistui! Väärä tunnus tai salasana")
-            return render_template("login.html")
+            filled = {"username": username}
+            return render_template("login.html", filled=filled)
 
 @app.route("/logout")
 def logout():
@@ -84,7 +85,8 @@ def register():
 
         if not username or len(username) > 16:
             flash("Virhe: Epäsopiva käyttäjätunnus")
-            return render_template("register.html")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
     
         password1 = request.form["password1"]
         password2 = request.form["password2"]
