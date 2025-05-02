@@ -114,7 +114,7 @@ def show_recipe(recipe_id):
     """
     require_login()
     user_id = session["user_id"]
-    recipes.visits(user_id)
+    recipes.visits(recipe_id)
     # only the creator can modify the original recipe
     user_is_creator = users.is_creator(recipes.creator_id(recipe_id))
     is_favorite = True if recipe_id in recipes.get_favorites_ids(user_id) else False
@@ -217,11 +217,17 @@ def edit_recipe(recipe_id):
 
     recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
     return redirect("/recipe/" + str(recipe["recipe_id"]))
-   
+
 @app.route("/remove/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
     require_login()
+
     recipe = recipes.get_recipe(recipe_id)
+    user_id = session["user_id"]
+
+    if not recipe or recipe["user_id"] != user_id:
+        flash("Virhe: Reseptin poisto epäonnistui!")
+        redirect("/recipe/" + str(recipe_id))
 
     if request.method == "GET":
         return render_template("remove.html", recipe=recipe, is_recipe=True)
