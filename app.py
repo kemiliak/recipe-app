@@ -78,21 +78,34 @@ def logout():
 def register():
     """Registration"""
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("register.html", filled={})
     if request.method == "POST":
         username = request.form["username"]
+
+        if not username or len(username) > 16:
+            flash("Virhe: Epäsopiva käyttäjätunnus")
+            return render_template("register.html")
+    
         password1 = request.form["password1"]
         password2 = request.form["password2"]
+
+        if not password1:
+            flash("Virhe: Salasana puuttuu!")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
         if password1 != password2:
             flash("Virhe: Salasanat eroavat!")
-            return render_template("register.html")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
+
         try:
             users.register(username, password1)
             flash("Tunnuksen luonti onnistui")
             return redirect("/login")
         except sqlite3.IntegrityError:
             flash("Virhe: Tunnus on jo olemassa, kirjaudu sisään tai valitse uusi tunnus")
-            return render_template("register.html")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
