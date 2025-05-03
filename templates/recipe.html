@@ -41,7 +41,9 @@
 <h2>Kommentit</h2>
 <ul>
 {% for comment in comments %}
-<li>{{comment[0]}} <br> Lähettänyt: {{comment.username}}, {{comment.sent_at}}</li>
+<li>{{ comment.comment | show_lines }}<br> Lähettänyt: {{ comment.username }}, {{ comment.sent_at }}
+</li>
+<br>
 {% endfor %}
 </ul>
 {% endif %}

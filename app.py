@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask
 from flask import abort, flash, render_template, redirect, request, session
 import users, recipes, config
+import markupsafe
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -284,6 +285,9 @@ def comment(recipe_id):
     comment = request.form["comment"]
     user_id = session["user_id"]
 
+    if not comment:
+        flash("VIRHE: Tyhjää kommenttia ei voi lähettää!")
+        return redirect("/recipe/" + str(recipe_id))
     if len(comment) > 5000:
         flash("VIRHE: Kommentti on liian pitkä!")
         return redirect("/recipe/" + str(recipe_id))
@@ -295,3 +299,9 @@ def comment(recipe_id):
         flash("VIRHE: Kommentointi epäonnistui")
     
     return redirect("/recipe/" + str(recipe_id))
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
