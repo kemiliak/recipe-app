@@ -92,9 +92,12 @@ def visits(recipe_id):
     sql = "INSERT INTO visits (visited_at, recipe_id) VALUES (datetime('now'), ?)"
     db.execute(sql, [recipe_id])
 
-# TODO: select most popular recipe
-# def most_popular_recipe():
-#     sql = """SELECT recipe_id FROM visits
-#              GROUP BY recipe_id
-#              ORDER BY count(recipe_id) DESC LIMIT 1"""
-#     return db.query(sql)[0][0]
+def most_popular_recipe():
+    sql = """SELECT recipe_id FROM visits
+             GROUP BY recipe_id
+             ORDER BY count(recipe_id) DESC LIMIT 1"""
+    return db.query(sql)[0][0]
+
+def get_recipe_name(recipe_id):
+    sql = "SELECT title FROM recipes WHERE recipe_id = ?"
+    return db.query(sql, [recipe_id])[0][0]

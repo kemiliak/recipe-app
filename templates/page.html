@@ -12,7 +12,7 @@ Reseptejä yhteensä: {{n_recipes}}
 Omia reseptejä: {{users_recipes}}
 <br>
 {% if best_recipe_id %}
-Suosituin <a href="/recipe/{{ best_recipe_id }}">resepti</a>
+Suosituin resepti: <a href="/recipe/{{ best_recipe_id }}"> {{ recipe_title }}</a>
 {% endif %}
 <br>
 <br>

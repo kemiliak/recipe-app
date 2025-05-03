@@ -37,16 +37,15 @@ def home_page():
     users_recipes = users_recipes if users_recipes else 0
     n_recipes = recipes.recipe_count()
     n_recipes = n_recipes if n_recipes else 0
-    # TODO: add currently most viewed recipe
-    # best_recipe_id = recipes.most_popular_recipe()
-    # best_recipe_id = best_recipe_id if best_recipe_id else None
+    best_recipe_id = recipes.most_popular_recipe()
+    best_recipe_id = best_recipe_id if best_recipe_id else False
+    recipe_title = recipes.get_recipe_name(best_recipe_id)
 
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
                             tallentamiasi reseptejä sekä hakea reseptejä:", \
                             items=options, n_recipes=n_recipes, users_recipes=users_recipes,
-                            best_recipe_id=False)
-
+                            best_recipe_id=best_recipe_id, recipe_title=recipe_title)
 
 @app.route("/login", methods=["GET","POST"])
 def login():
