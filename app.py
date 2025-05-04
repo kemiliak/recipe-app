@@ -1,9 +1,10 @@
 """Module for application routes"""
 import secrets, sqlite3
 from flask import Flask
-from flask import abort, flash, render_template, redirect, request, session
+from flask import abort, flash, render_template, redirect, request, session, g
 import users, recipes, config
 import markupsafe
+import time
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -15,6 +16,16 @@ def require_login():
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response
 
 @app.route("/")
 def index():
@@ -197,8 +208,6 @@ def new_recipe():
 def display_recipes():
     """Shows a list of recipes from all users"""
     require_login()
-    #user_id = session["user_id"]
-    #username = users.username(user_id)
     r = recipes.get_recipes()
     return render_template("recipes.html", recipes=r, user="Kaikki")
 
