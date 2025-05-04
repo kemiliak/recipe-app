@@ -3,6 +3,7 @@
     <h1>Haku</h1>
     <p>Hakusana: <input type="text" name="query"></p>
     <p>*tyhjä haku palauttaa kaikki reseptit</p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Hae">
 </form>
 <br>

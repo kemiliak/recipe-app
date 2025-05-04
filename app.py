@@ -1,5 +1,5 @@
 """Module for application routes"""
-import sqlite3
+import secrets, sqlite3
 from flask import Flask
 from flask import abort, flash, render_template, redirect, request, session
 import users, recipes, config
@@ -10,6 +10,10 @@ app.secret_key = config.secret_key
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -62,6 +66,7 @@ def login():
 
         if user_id:
             session["user_id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/page")
         else:
             flash("Virhe: Kirjautuminen epäonnistui! Väärä tunnus tai salasana")
@@ -142,6 +147,7 @@ def new_recipe():
     if request.method == "GET":
         return render_template("create.html", filled={})
     if request.method == "POST":
+        check_csrf()
         title = request.form["title"]
         instructions = request.form["instructions"]
         ingredients = request.form["ingredients"]
@@ -165,8 +171,8 @@ def new_recipe():
                 flash(f"Virhe: Reseptin {field[0]} sisältää liikaa merkkejä")
                 return filled
 
-    recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
-    return redirect("/recipe/" + str(recipe_id))
+        recipe_id = recipes.add_recipe(title, instructions, ingredients, cooking_time, serving_size, user_id)
+        return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/recipes")
 def display_recipes():
@@ -186,6 +192,7 @@ def search():
     if request.method == "GET":
         return render_template("search.html")
     if request.method == "POST":
+        check_csrf()
         query = request.form.get("query")
         results = recipes.search(query) if query else recipes.get_recipes()
         return render_template("recipes.html", recipes=results, user="Kaikki")
@@ -198,6 +205,7 @@ def edit_recipe(recipe_id):
                                 ingredients=recipe[3], cooking_time=recipe[4], serving_size=recipe[5], \
                                 created_at=recipe[6], creator=recipe[8], recipe_id=recipe_id)
     if request.method == "POST":
+        check_csrf()
         title = request.form["title"]
         instructions = request.form["instructions"]
         ingredients = request.form["ingredients"]
@@ -220,8 +228,8 @@ def edit_recipe(recipe_id):
                 flash(f"Virhe: Reseptin {field[0]} sisältää liikaa merkkejä")
                 return filled
 
-    recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
-    return redirect("/recipe/" + str(recipe["recipe_id"]))
+        recipes.update_recipe(recipe["recipe_id"], title, instructions, ingredients, cooking_time, serving_size, user_id)
+        return redirect("/recipe/" + str(recipe["recipe_id"]))
 
 @app.route("/remove/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
@@ -238,6 +246,7 @@ def delete_recipe(recipe_id):
         return render_template("remove.html", recipe=recipe, is_recipe=True)
 
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             recipes.remove_recipe(recipe["recipe_id"])
 
@@ -273,14 +282,16 @@ def remove_from_favorites(recipe_id):
         return render_template("remove.html", recipe=recipe, is_recipe=False)
 
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             recipes.remove_favorite(recipe["recipe_id"])
-
-    return redirect("/favorites")
+            return redirect("/favorites")
 
 @app.route("/comment/<int:recipe_id>", methods=["POST"])
 def comment(recipe_id):
     require_login()
+    check_csrf()
+
     comment = request.form["comment"]
     user_id = session["user_id"]
 
