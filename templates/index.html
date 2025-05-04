@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<title>Reseptisovellus</title>
-<h1>RESEPTISOVELLUS</h1>
-<p>{{ message }}</p>
-<p>{{ intro }}</p>
-<ul>
-{% for item in items %}
-<li> {{ item }}
-{% endfor %}
-</ul>
-<p>{{ reminder }}</p>
-<a href="\login">Kirjaudu sisään</a> | <a href="\register">Luo käyttäjä</a>
+<html>
+
+<head>
+    <title>Reseptisovellus</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <h1>RESEPTISOVELLUS</h1>
+    <p>{{ message }}</p>
+    <p>{{ intro }}</p>
+    <div class="recipe_list">
+        <ul class="r_list">
+        {% for item in items %}
+        <li> {{ item }}
+        {% endfor %}
+        </ul>
+    </div>
+    <p>{{ reminder }}</p>
+    <a href="\login">Kirjaudu sisään</a> | <a href="\register">Luo käyttäjä</a>
+</body>
+
+</html>

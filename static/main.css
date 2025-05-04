@@ -1,0 +1,74 @@
+body {
+    margin: auto;
+    max-width: 50em;
+    font-family: sans-serif;
+    background-color: lightslategray;
+    text-align: center;
+  }
+  
+.header {
+color: black;
+margin: 0.5em 0;
+padding: auto;
+}
+
+.nav {
+background-color: lightgrey;
+margin: 0.5em 0;
+padding: 0.5em;
+}
+
+div.recipe {
+    display: inline-block;
+    text-align: left;
+    padding: auto;
+}
+
+div.recipe_list {
+    text-align: center;
+}
+
+ul.r_list {
+    display: inline-block;
+    text-align: left;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+nav {
+text-align: center;
+}
+
+nav ul {
+padding: 0;
+margin: 0;
+}
+
+nav li {
+display: inline-block;
+padding: 0 1em;
+margin: 0;
+}
+
+nav li:not(:first-of-type) {
+margin-left: -0.25em;
+}
+
+nav li:not(:last-of-type) {
+border-right: 1px solid black;
+}
+
+.page-nav {
+text-align: center;
+}
+
+.info {
+    color: black;
+    font-weight: bold;
+    margin: 1em;
+    padding: 0.5em;
+    background-color: lightcyan;
+    font-size: large;
+}

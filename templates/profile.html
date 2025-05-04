@@ -1,12 +1,38 @@
-<h1>Käyttäjän {{user}} lisäämät reseptit</h1>
+<!DOCTYPE html>
+<html>
 
-<ul>
-    {% for recipe in recipes %}
-    <li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
-    {% endfor %}
-</ul>
-<br>
- Reseptejä: {{users_recipe_count}}
-<br>
+<head>
+    <title>Profiili</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
 
-<a href="\page">Etusivulle</a>
+<body>
+    <h1>Käyttäjän {{user}} lisäämät reseptit</h1>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="/search">Haku</a></li>
+                <li><a href="/create">Lisää resepti</a></li>
+                <li><a href="/recipes">Reseptit</a></li>
+                <li><a href="/profile">Oma profiili</a></li>
+                <li><a href="/favorites">Suosikit</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="recipe_list">
+        <ul class="r_list">
+            {% for recipe in recipes %}
+            <li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <br>
+    Reseptejä: {{users_recipe_count}}
+    <br>
+    <br>
+    <a href="\page">Etusivulle</a>
+
+</body>
+
+</html>

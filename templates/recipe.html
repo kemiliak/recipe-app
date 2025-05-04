@@ -1,4 +1,31 @@
-<h1>{{ title }}</h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+
+
+<h1>Resepti</h1>
+<div class="nav">
+    <nav>
+        <ul>
+            <li><a href="/search">Haku</a></li>
+            <li><a href="/create">Lisää resepti</a></li>
+            <li><a href="/recipes">Reseptit</a></li>
+            <li><a href="/profile">Oma profiili</a></li>
+            <li><a href="/favorites">Suosikit</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="recipe">
+<h2>{{ title }}</h2>
+
+
+
 {% for message in get_flashed_messages() %}
     <p class="info">
         {{ message }}
@@ -22,8 +49,9 @@
 <li>{{instruction}}</li>
 {% endfor %}
 </ul>
+</div>
 <hr>
-<a id="backLink" href="\page">Takaisin</a>
+<a id="backLink" href="\page">Etusivulle</a>
 {% if user_is_creator %}
 | <a href="/create/{{ recipe_id }}">Muokkaa</a>
 | <a href="/remove/{{ recipe_id }}">Poista</a>
@@ -36,17 +64,20 @@
 {% endif %}
 
 <br> 
-
-{% if comments %}
-<h2>Kommentit</h2>
-<ul>
-{% for comment in comments %}
-<li>{{ comment.comment | show_lines }}<br> Lähettänyt: {{ comment.username }}, {{ comment.sent_at }}
-</li>
 <br>
-{% endfor %}
-</ul>
-{% endif %}
+
+<div class="recipe">
+    {% if comments %}
+    <h2>Kommentit</h2>
+    <ul>
+    {% for comment in comments %}
+    <li>{{ comment.comment | show_lines }}<br> Lähettänyt: {{ comment.username }}, {{ comment.sent_at }}
+    </li>
+    <br>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</div>
 
 <h3>Kommentoi</h3>
 <form action="/comment/{{recipe_id}}" method="POST">
@@ -56,3 +87,6 @@
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 <input type="submit" value="Lähetä">
 </form>
+
+
+</html>

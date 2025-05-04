@@ -30,7 +30,7 @@ def index():
 @app.route("/page")
 def home_page():
     """
-    Personal page
+    Front page
     """
     require_login()
     user_id = session["user_id"]
@@ -45,7 +45,7 @@ def home_page():
 
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
-                            tallentamiasi reseptejä sekä hakea reseptejä:", \
+                            muiden reseptejä, käyttää hakuominaisuutta sekä tallentaa reseptejä suosikeiksi.", \
                             items=options, n_recipes=n_recipes,
                             best_recipe_id=best_recipe_id, recipe_title=recipe_title)
 

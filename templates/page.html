@@ -1,17 +1,38 @@
-<h1>Etusivu</h1>
-<p>{{ message }}, {{ user }}!</p>
-<p>{{ intro }}</p>
-<ul>
-{% for item in items %}
-<li><a href="{{ item[1] }}">{{ item[0] }}</a></li>
-{% endfor %}
-</ul>
-<br>
-Reseptejä yhteensä: {{n_recipes}}
-<br>
-{% if best_recipe_id %}
-Suosituin resepti: <a href="/recipe/{{ best_recipe_id }}"> {{ recipe_title }}</a>
-{% endif %}
-<br>
-<br>
-<a href="\logout">Kirjaudu ulos</a>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reseptisovellus</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <h1>Reseptisovellus</h1>
+    <div class="nav">
+        <nav>
+            <ul>
+                {% for item in items %}
+                <li><a href="{{ item[1] }}">{{ item[0] }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+
+    <p>{{ message }}, {{ user }}!</p>
+    <p>{{ intro }}</p>
+
+    
+    
+    <br>
+    Reseptejä yhteensä: {{n_recipes}}
+    <br>
+    <br>
+    {% if best_recipe_id %}
+    Suosituin resepti: <a href="/recipe/{{ best_recipe_id }}"> {{ recipe_title }}</a>
+    {% endif %}
+    <br>
+    <br>
+    <a href="\logout">Kirjaudu ulos</a>
+</body>
+
+</html>

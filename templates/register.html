@@ -1,17 +1,28 @@
-<h2>Luo tunnus</h2>
+<!DOCTYPE html>
 
-{% for message in get_flashed_messages() %}
-    <p class="info">
-        {{ message }}
-    </p>
-{% endfor %}
-<form action="/register" method="POST">
-    <p> Käyttäjätunnus: <br>
-    <input type="text" id="username" name="username" value="{{ filled.username }}" maxlength="16"></p>
-    <p> Salasana: <br>
-    <input type="password" name="password1"></p>
-    <p> Salasana uudestaan: <br>
-    <input type="password" name="password2"></p>
-    <input type="submit" value="Luo tunnus">
-</form>
-<a href="/">Takaisin</a>
+<html>
+<head>
+    <title>Luo tunnus</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+<h1>Luo tunnus</h1>
+    {% for message in get_flashed_messages() %}
+        <p class="info">
+            {{ message }}
+        </p>
+    {% endfor %}
+    <form action="/register" method="POST">
+        <p> Käyttäjätunnus: <br>
+        <input type="text" id="username" name="username" value="{{ filled.username }}" maxlength="16"></p>
+        <p> Salasana: <br>
+        <input type="password" name="password1"></p>
+        <p> Salasana uudestaan: <br>
+        <input type="password" name="password2"></p>
+        <input type="submit" value="Luo tunnus">
+    </form>
+    <br>
+    <a href="/">Takaisin</a>
+</body>
+</html>

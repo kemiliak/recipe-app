@@ -1,5 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reseptit</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+
 {% if user == "Kaikki" %}
-<h1>{{ user }} reseptit</h1>
+    <h1>{{ user }} reseptit</h1>
 {% else %}
     {% if favorites %}
     <h1>Suosikit</h1>
@@ -7,10 +16,26 @@
     <h1>Reseptit</h1>
     {% endif %}
 {% endif %}
-<ul>
+<div class="nav">
+<nav>
+    <ul>
+        <li><a href="/search">Haku</a></li>
+        <li><a href="/create">Lisää resepti</a></li>
+        <li><a href="/recipes">Reseptit</a></li>
+        <li><a href="/profile">Oma profiili</a></li>
+        <li><a href="/favorites">Suosikit</a></li>
+    </ul>
+</nav>
+</div>
+
+<div class="recipe_list">
+<ul class="r_list">
 {% for recipe in recipes %}
-<li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
+    <li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
 {% endfor %}
 </ul>
 <br>
-<a href="/page">Takaisin</a>
+<a href="/page">Etusivulle</a>
+</div>
+
+</html>

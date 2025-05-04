@@ -1,20 +1,37 @@
+<!DOCTYPE html>
+<html>
+
 <head>
     {% if is_recipe %}
     <title>Reseptin poisto</title>
     {% else %}
     <title>Poista suosikeista</title>
     {% endif %}
+    <link rel="stylesheet" href="/static/main.css">
 </head>
+
 <body>
     {% if is_recipe %}
     <h1>Reseptin poisto</h1>
     {% else %}
     <h1>Poista suosikeista</h1>
     {% endif %}
-<form action="{{ recipe.id }}" method="POST">
-    <p>Haluatko varmasti poistaa reseptin?</p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" name="continue" value="Jatka"/>
-    <input type="submit" name="cancel" value="Peruuta"/>
-</form>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="/search">Haku</a></li>
+                <li><a href="/create">Lisää resepti</a></li>
+                <li><a href="/recipes">Reseptit</a></li>
+                <li><a href="/profile">Oma profiili</a></li>
+                <li><a href="/favorites">Suosikit</a></li>
+            </ul>
+        </nav>
+        </div>
+    <form action="{{ recipe.id }}" method="POST">
+        <p>Haluatko varmasti poistaa reseptin?</p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="submit" name="continue" value="Jatka"/>
+        <input type="submit" name="cancel" value="Peruuta"/>
+    </form>
 </body>
+</html>

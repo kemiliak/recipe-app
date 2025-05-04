@@ -1,10 +1,31 @@
-<form action="/search" method="POST">
-    <title>Haku</title>
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Haku</title>
+<link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
     <h1>Haku</h1>
-    <p>Hakusana: <input type="text" name="query"></p>
-    <p>*tyhjä haku palauttaa kaikki reseptit</p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Hae">
-</form>
-<br>
-<a href="/page">Takaisin</a>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="/search">Haku</a></li>
+                <li><a href="/create">Lisää resepti</a></li>
+                <li><a href="/recipes">Reseptit</a></li>
+                <li><a href="/profile">Oma profiili</a></li>
+                <li><a href="/favorites">Suosikit</a></li>
+            </ul>
+        </nav>
+    </div>
+    <form action="/search" method="POST">
+        <p>Hakusana: <input type="text" name="query"></p>
+        <p>*tyhjä haku palauttaa kaikki reseptit</p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="submit" value="Hae">
+    </form>
+    <br>
+    <a href="/page">Etusivulle</a>
+</body>
+</html>

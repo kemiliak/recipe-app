@@ -1,29 +1,50 @@
-<title>Lisää resepti</title>
-<h2>Lisää resepti</h2>
+<!DOCTYPE html>
 
-{% for message in get_flashed_messages() %}
-    <p class="info">
-        {{ message }}
-    </p>
-{% endfor %}
+<html>
 
-<title>Lisää resepti</title>
-<form action="/create/{{recipe_id}}" method="POST">
-    <p>Reseptin nimi*:<br>
-    <input type="text" name="title" value="{{title}}"></p>
-    <p>Valmistusaika:<br>
-    <input type="text" name="cooking_time" value="{{cooking_time}}"></p>
-    <p>Annoksia:<br>
-    <input type="text" name="serving_size" value="{{serving_size}}"></p>
-    <p>Ainekset*:<br>
-    <textarea id="inputField" name="ingredients" rows="5" cols="50">{{ingredients}}</textarea>
-    <br>
-    <p>Valmistusohje*:<br>
-    <textarea id="inputField" name="instructions" rows="5" cols="50">{{instructions}}</textarea>
-    <br>
-    <p>Erottele ainekset sekä ohjeen eri vaiheet rivinvaihdoilla.<br></p>
-    <p>* tähdellä merkityt kentät ovat pakollisia<br></p>
-    <p><br>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Tallenna"> | <a id="backLink" href="\page">Takaisin</a>
-</form>
+<head>
+    <title>Lisää resepti</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <h1>Lisää resepti</h1>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="/search">Haku</a></li>
+                <li><a href="/create">Lisää resepti</a></li>
+                <li><a href="/recipes">Reseptit</a></li>
+                <li><a href="/profile">Oma profiili</a></li>
+                <li><a href="/favorites">Suosikit</a></li>
+            </ul>
+        </nav>
+    </div>
+    {% for message in get_flashed_messages() %}
+        <p class="info">
+            {{ message }}
+        </p>
+    {% endfor %}
+
+    <title>Lisää resepti</title>
+    <form action="/create/{{recipe_id}}" method="POST">
+        <p>Reseptin nimi*:<br>
+        <input type="text" name="title" value="{{title}}"></p>
+        <p>Valmistusaika:<br>
+        <input type="text" name="cooking_time" value="{{cooking_time}}"></p>
+        <p>Annoksia:<br>
+        <input type="text" name="serving_size" value="{{serving_size}}"></p>
+        <p>Ainekset*:<br>
+        <textarea id="inputField" name="ingredients" rows="5" cols="50">{{ingredients}}</textarea>
+        <br>
+        <p>Valmistusohje*:<br>
+        <textarea id="inputField" name="instructions" rows="5" cols="50">{{instructions}}</textarea>
+        <br>
+        <p>Erottele ainekset sekä ohjeen eri vaiheet rivinvaihdoilla.<br></p>
+        <p>* tähdellä merkityt kentät ovat pakollisia<br></p>
+        <p><br>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="submit" value="Tallenna"> | <a id="backLink" href="/page">Etusivulle</a>
+    </form>
+</body>
+</html>
