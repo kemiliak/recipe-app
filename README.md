@@ -29,3 +29,9 @@ Käynnistä sovellus:
 ```
 $ flask run
 ```
+
+## Sovelluksen testaus suurella tietomäärällä:
+
+seed.pyn ajamisen jälkeen, eli reseptejä ollessa yli 100000 sivun lataamiseen ja toimintoihin, kuten
+kirjautumiseen tai reseptin lisäämiseen kului aikaa 0.01-0.06s. Kuormittaviin latauksiin kuten kaikkien 
+reseptien näyttämiseen kului enimmillään 0.37s.
