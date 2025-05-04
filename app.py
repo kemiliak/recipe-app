@@ -49,7 +49,6 @@ def home_page():
                             items=options, n_recipes=n_recipes,
                             best_recipe_id=best_recipe_id, recipe_title=recipe_title)
 
-
 @app.route("/profile")
 def user_profile_page():
     require_login()
@@ -60,6 +59,16 @@ def user_profile_page():
     users_recipe_count = users_recipe_count if users_recipe_count else 0
     return render_template("profile.html", recipes=users_recipes, user = username, users_recipe_count=users_recipe_count)
 
+@app.route("/profile/<int:user_id>")
+def show_user(user_id):
+    require_login()
+    user = users.username(user_id)
+    if not user:
+        abort(404)
+    user_recipes = recipes.get_user_recipes(user_id)
+    users_recipe_count = recipes.users_recipe_count(user_id)
+    users_recipe_count = users_recipe_count if users_recipe_count else 0
+    return render_template("profile.html", recipes=user_recipes, user=user, users_recipe_count=users_recipe_count)
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -146,7 +155,7 @@ def show_recipe(recipe_id):
                             instructions=instructions, cooking_time=recipe[4], \
                             serving_size=recipe[5], created_at=recipe[6], creator=recipe[8], \
                             user_is_creator=user_is_creator, is_favorite=is_favorite, \
-                            recipe_id=recipe_id, comments=comments)
+                            recipe_id=recipe_id, comments=comments, user_id=recipe[7])
 
 @app.route("/create/", methods=["GET", "POST"])
 def new_recipe():
@@ -186,7 +195,7 @@ def new_recipe():
 
 @app.route("/recipes")
 def display_recipes():
-    """Shows a list of recipes the user has created"""
+    """Shows a list of recipes from all users"""
     require_login()
     #user_id = session["user_id"]
     #username = users.username(user_id)
@@ -260,7 +269,7 @@ def delete_recipe(recipe_id):
         if "continue" in request.form:
             recipes.remove_recipe(recipe["recipe_id"])
 
-    return redirect("/recipes")
+    return redirect("/profile")
 
 @app.route("/add_to_favorites/<int:recipe_id>")
 def add_to_favorites(recipe_id):
