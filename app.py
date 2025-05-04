@@ -41,7 +41,7 @@ def index():
 @app.route("/page")
 def home_page():
     """
-    Front page
+    Main page
     """
     require_login()
     user_id = session["user_id"]
@@ -62,13 +62,16 @@ def home_page():
 
 @app.route("/profile")
 def user_profile_page():
+    """
+    Displays current users profile
+    """
     require_login()
     user_id = session["user_id"]
     username = users.username(user_id)
     users_recipes = recipes.get_user_recipes(user_id)
     users_recipe_count = recipes.users_recipe_count(user_id)
     users_recipe_count = users_recipe_count if users_recipe_count else 0
-    return render_template("profile.html", recipes=users_recipes, user = username, users_recipe_count=users_recipe_count)
+    return render_template("profile.html", recipes=users_recipes, user=username, users_recipe_count=users_recipe_count)
 
 @app.route("/profile/<int:user_id>")
 def show_user(user_id):
@@ -187,7 +190,7 @@ def new_recipe():
 
         filled = render_template("create.html", title=title, instructions=instructions, \
                                     ingredients=ingredients, cooking_time=cooking_time, \
-                                    serving_size = serving_size)
+                                    serving_size=serving_size)
         
         fields = [["nimi", title, 35], ["ainekset", ingredients, 5000], ["ohje", instructions, 5000],
                   ["valmistusaika", cooking_time, 35], ["annoskoko", serving_size, 35]]
