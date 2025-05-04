@@ -1,4 +1,4 @@
-<h1>Oma profiili</h1>
+<h1>Etusivu</h1>
 <p>{{ message }}, {{ user }}!</p>
 <p>{{ intro }}</p>
 <ul>
@@ -8,8 +8,6 @@
 </ul>
 <br>
 Reseptejä yhteensä: {{n_recipes}}
-<br>
-Omia reseptejä: {{users_recipes}}
 <br>
 {% if best_recipe_id %}
 Suosituin resepti: <a href="/recipe/{{ best_recipe_id }}"> {{ recipe_title }}</a>

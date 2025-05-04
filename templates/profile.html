@@ -1,0 +1,12 @@
+<h1>Oma profiili</h1>
+
+<ul>
+    {% for recipe in recipes %}
+    <li><a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a></li>
+    {% endfor %}
+</ul>
+<br>
+Omia reseptejä: {{users_recipe_count}}
+<br>
+
+<a href="\page">Etusivulle</a>

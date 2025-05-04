@@ -36,9 +36,7 @@ def home_page():
     user_id = session["user_id"]
     user = users.username(user_id)
     options = [("Haku", "/search"), ("Lisää resepti", "/create"), \
-               ("Omat reseptit", "/recipes"), ("Suosikit", "/favorites")]
-    users_recipes = recipes.users_recipe_count(user_id)
-    users_recipes = users_recipes if users_recipes else 0
+               ("Reseptit", "/recipes"), ("Oma profiili", "/profile"), ("Suosikit", "/favorites")]
     n_recipes = recipes.recipe_count()
     n_recipes = n_recipes if n_recipes else 0
     best_recipe_id = recipes.most_popular_recipe()
@@ -48,8 +46,20 @@ def home_page():
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
                             tallentamiasi reseptejä sekä hakea reseptejä:", \
-                            items=options, n_recipes=n_recipes, users_recipes=users_recipes,
+                            items=options, n_recipes=n_recipes,
                             best_recipe_id=best_recipe_id, recipe_title=recipe_title)
+
+
+@app.route("/profile")
+def user_profile_page():
+    require_login()
+    user_id = session["user_id"]
+    username = users.username(user_id)
+    users_recipes = recipes.get_user_recipes(user_id)
+    users_recipe_count = recipes.users_recipe_count(user_id)
+    users_recipe_count = users_recipe_count if users_recipe_count else 0
+    return render_template("profile.html", recipes=users_recipes, user = username, users_recipe_count=users_recipe_count)
+
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -178,10 +188,10 @@ def new_recipe():
 def display_recipes():
     """Shows a list of recipes the user has created"""
     require_login()
-    user_id = session["user_id"]
-    username = users.username(user_id)
-    r = recipes.get_user_recipes(user_id)
-    return render_template("recipes.html", recipes=r, user = username)
+    #user_id = session["user_id"]
+    #username = users.username(user_id)
+    r = recipes.get_recipes()
+    return render_template("recipes.html", recipes=r, user="Kaikki")
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
