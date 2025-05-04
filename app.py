@@ -39,15 +39,15 @@ def home_page():
                ("Reseptit", "/recipes"), ("Oma profiili", "/profile"), ("Suosikit", "/favorites")]
     n_recipes = recipes.recipe_count()
     n_recipes = n_recipes if n_recipes else 0
-    best_recipe_id = recipes.most_popular_recipe()
-    best_recipe_id = best_recipe_id if best_recipe_id else False
-    recipe_title = recipes.get_recipe_name(best_recipe_id)
+    # best_recipe_id = recipes.most_popular_recipe()
+    # best_recipe_id = best_recipe_id if best_recipe_id else False
+    # recipe_title = recipes.get_recipe_name(best_recipe_id)
 
     return render_template("page.html", message="Tervetuloa", user=user, \
                            intro="Tällä sivulla voit luoda uusia reseptejä, tutkia omia sekä \
                             muiden reseptejä, käyttää hakuominaisuutta sekä tallentaa reseptejä suosikeiksi.", \
-                            items=options, n_recipes=n_recipes,
-                            best_recipe_id=best_recipe_id, recipe_title=recipe_title)
+                            items=options, n_recipes=n_recipes)
+    #                        best_recipe_id=best_recipe_id, recipe_title=recipe_title)
 
 @app.route("/profile")
 def user_profile_page():
